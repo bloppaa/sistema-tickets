@@ -5,13 +5,13 @@ app.use(express.json()); //recibir datos en formato JSON
 
 //usuarios de prueba 
 const usuarios = [
-    { id: 1, nombre: "Juan" },
-    { id: 2, nombre: "Maria" }
+    { id: 1, name: "Juan" },
+    { id: 2, name: "Maria" }
 ];
 //clientes de prueba 
 const clientes = [
-    { id: 1, nombre: "Cliente A" },
-    { id: 2, nombre: "Cliente B" }
+    { id: 1, name: "Cliente A" },
+    { id: 2, name: "Cliente B" }
 ];
 
 app.get('/', (req, res) => {
@@ -48,7 +48,7 @@ app.put('/usuarios/:id', (req, res) => {
     const usuario = usuarios.find(c => c.id === parseInt(req.params.id));
     
     if (!usuario) return res.status(404).send('Usuario no encontrado');
-    usuario.nombre = req.body.nombre;
+    usuario.name = req.body.name;
 
     res.send(usuario); 
 });
@@ -94,7 +94,7 @@ app.put('/clientes/:id', (req, res) => {
     const cliente = clientes.find(c => c.id === parseInt(req.params.id));
     
     if (!cliente) return res.status(404).send('Cliente no encontrado');
-    cliente.nombre = req.body.nombre;
+    cliente.name = req.body.name;
 
     res.send(cliente); 
 });
