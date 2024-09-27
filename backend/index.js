@@ -3,110 +3,121 @@ const app = express()
 
 app.use(express.json()); //recibir datos en formato JSON
 
-//usuarios de prueba 
-const usuarios = [
-    { id: 1, name: "Juan" },
-    { id: 2, name: "Maria" }
-];
-//clientes de prueba 
-const clientes = [
-    { id: 1, name: "Cliente A" },
-    { id: 2, name: "Cliente B" }
+//Clients de prueba (personas que requiere el requerimiento)
+const Clients = [
+    { id: 1, name: "Juan" , rut:"1234", rut_company: "aaa111", email: "juan@gmail.com", pasword: "a1"},
+    { id: 2, name: "Maria" , rut:"2345", rut_company: "bbb222", email: "matia@gmail.com", pasword: "b2"},];
+//Users de prueba  (Tecnicos)
+const Users = [
+    { id: 1, name: "Company A", rut: "11111", email: "company1@gmail.com", pasword:"tec1"},
+    { id: 2, name: "Company b", rut: "22222", email: "company2@gmail.com", pasword:"tec2"},
 ];
 
 app.get('/', (req, res) => {
     res.send ('Node JS api');
 });
 
-////////Trabajar con usuarios////////
+////////Trabajar con Clients////////
 
 // GET LISTA
-app.get('/usuarios', (req, res) => {
-    res.json(usuarios);
+app.get('/Clients', (req, res) => {
+    res.json(Clients);
 });
 
 //Buscar
-app.get('/usuarios/:id', (req, res) => {
-    const usuario = usuarios.find(c => c.id === parseInt(req.params.id));
+app.get('/Clients/:id', (req, res) => {
+    const client = Clients.find(c => c.id === parseInt(req.params.id));
     
-    if (!usuario) return res.status(404).send('Usuario no encontrado');
-    else res.send(usuario);
+    if (!client) return res.status(404).send('client no encontrado');
+    else res.send(client);
 });
 
 // POST
-app.post('/usuarios', (req, res) => {
-    const nuevoUsuario = {
-        id: usuarios.length+1,
-        name: req.body.name
+app.post('/Clients', (req, res) => {
+    const new_client = {
+        id: Clients.length+1,
+        name: req.body.name,
+        rut: req.body.rut,
+        rut_company: req.body.rut_company,
+        email: req.body.email,
+        pasword: req.body.pasword
     };
-    usuarios.push(nuevoUsuario);
-    res.send(nuevoUsuario);
+    Clients.push(new_client);
+    res.send(new_client);
 });
 
 // PUT
-app.put('/usuarios/:id', (req, res) => {
-    const usuario = usuarios.find(c => c.id === parseInt(req.params.id));
+app.put('/Clients/:id', (req, res) => {
+    const client = Clients.find(c => c.id === parseInt(req.params.id));
     
-    if (!usuario) return res.status(404).send('Usuario no encontrado');
-    usuario.name = req.body.name;
-
-    res.send(usuario); 
+    if (!client) return res.status(404).send('client not found');
+    client.name = req.body.name;
+    client.rut = req.body.rut;
+    client.rut_company = req.body.rut_company;
+    client.email = req.body.email;
+    client.pasword = req.body.pasword;
+    res.send(client); 
 });
 
 // DELETE
-app.delete('/usuarios/:id', (req, res) => {
-    const usuario = usuarios.find(c => c.id === parseInt(req.params.id));
-    if (!usuario) return res.status(404).send('Estudiante no encontrado');
+app.delete('/Clients/:id', (req, res) => {
+    const client = Clients.find(c => c.id === parseInt(req.params.id));
+    if (!client) return res.status(404).send('client not found');
 
-    const index = usuarios.indexOf(usuario);
-    usuarios.splice(index,1);
-    res.send(usuario);
+    const index = Clients.indexOf(client);
+    Clients.splice(index,1);
+    res.send(client);
 });
 
 
-////////Trabajar con clientes////////
+////////Trabajar con Users////////
 
 // GET LISTA
-app.get('/clientes', (req, res) => {
-    res.json(clientes);
+app.get('/Users', (req, res) => {
+    res.json(Users);
 });
 
 //Buscar
-app.get('/clientes/:id', (req, res) => {
-    const cliente = clientes.find(c => c.id === parseInt(req.params.id));
+app.get('/Users/:id', (req, res) => {
+    const User = Users.find(c => c.id === parseInt(req.params.id));
     
-    if (!cliente) return res.status(404).send('Cliente no encontrado');
-    else res.send(cliente);
+    if (!User) return res.status(404).send('User not found');
+    else res.send(User);
 });
 
 // POST
-app.post('/clientes', (req, res) => {
-    const nuevoCliente = {
-        id: clientes.length+1,
-        name: req.body.name
+app.post('/Users', (req, res) => {
+    const new_user = {
+        id: Users.length+1,
+        name: req.body.name,
+        rut: req.body.rut,
+        email: req.body.email,
+        pasword: req.body.pasword
     };
-    clientes.push(nuevoCliente);
-    res.send(nuevoCliente);
+    Users.push(new_user);
+    res.send(new_user);
 });
 
 // PUT
-app.put('/clientes/:id', (req, res) => {
-    const cliente = clientes.find(c => c.id === parseInt(req.params.id));
+app.put('/Users/:id', (req, res) => {
+    const User = Users.find(c => c.id === parseInt(req.params.id));
     
-    if (!cliente) return res.status(404).send('Cliente no encontrado');
-    cliente.name = req.body.name;
-
-    res.send(cliente); 
+    if (!User) return res.status(404).send('User not found');
+    user.name = req.body.name;
+    user.rut = req.body.rut ;
+    user.email = req.body.email ;
+    user.pasword = req.body.pasword ;
+    res.send(User); 
 });
 
 // DELETE
-app.delete('/clientes/:id', (req, res) => {
-    const cliente = clientes.find(c => c.id === parseInt(req.params.id));
-    if (!cliente) return res.status(404).send('Cliente no encontrado');
+app.delete('/Users/:id', (req, res) => {
+    const User = Users.find(c => c.id === parseInt(req.params.id));
+    if (!User) return res.status(404).send('User not found');
 
-    const index = clientes.indexOf(cliente);
-    clientes.splice(index,1);
-    res.send(cliente);
+    const index = Users.indexOf(User);
+    Users.splice(index,1);
+    res.send(User);
 });
 
 //////// PUERTO A ESCUCHAR /////////
