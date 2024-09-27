@@ -9,8 +9,8 @@ const Clients = [
     { id: 2, name: "Maria" , rut:"2345", rut_company: "bbb222", email: "matia@gmail.com", pasword: "b2"},];
 //Users de prueba  (Tecnicos)
 const Users = [
-    { id: 1, name: "Company A", rut: "11111", email: "company1@gmail.com", pasword:"tec1"},
-    { id: 2, name: "Company b", rut: "22222", email: "company2@gmail.com", pasword:"tec2"},
+    { id: 1, name: "tec_name A", rut: "11111", email: "company1@gmail.com", pasword:"tec1"},
+    { id: 2, name: "tec_name b", rut: "22222", email: "company2@gmail.com", pasword:"tec2"},
 ];
 
 app.get('/', (req, res) => {
