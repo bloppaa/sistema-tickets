@@ -1,6 +1,6 @@
 import express from "express";
 
-const router = express.Router();
+const clientsRouter = express.Router();
 
 // clients de prueba
 const clients = [
@@ -23,12 +23,12 @@ const clients = [
 ];
 
 // Obtener clients
-router.get("/", (req, res) => {
+clientsRouter.get("/", (req, res) => {
   res.status(200).json(clients);
 });
 
 // Buscar client por id
-router.get("/:id", (req, res) => {
+clientsRouter.get("/:id", (req, res) => {
   const client = clients.find((c) => c.id === parseInt(req.params.id));
 
   if (!client) {
@@ -39,7 +39,7 @@ router.get("/:id", (req, res) => {
 });
 
 // Crear client
-router.post("/", (req, res) => {
+clientsRouter.post("/", (req, res) => {
   const new_client = {
     id: clients.length + 1,
     name: req.body.name,
@@ -53,7 +53,7 @@ router.post("/", (req, res) => {
 });
 
 // Actualizar client
-router.put("/:id", (req, res) => {
+clientsRouter.put("/:id", (req, res) => {
   const client = clients.find((c) => c.id === parseInt(req.params.id));
 
   if (!client) {
@@ -68,7 +68,7 @@ router.put("/:id", (req, res) => {
 });
 
 // Eliminar client
-router.delete("/:id", (req, res) => {
+clientsRouter.delete("/:id", (req, res) => {
   const client = clients.find((c) => c.id === parseInt(req.params.id));
   if (!client) {
     return res.status(404).send("client no encontrado");
@@ -78,4 +78,4 @@ router.delete("/:id", (req, res) => {
   res.status(200).send(client);
 });
 
-export default router;
+export default clientsRouter;
