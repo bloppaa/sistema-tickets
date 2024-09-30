@@ -21,12 +21,12 @@ const users = [
 ];
 
 // Obtener users
-app.get("/", (req, res) => {
+usersRouter.get("/", (req, res) => {
   res.status(200).json(users);
 });
 
 // Buscar user por id
-app.get("/:id", (req, res) => {
+usersRouter.get("/:id", (req, res) => {
   const user = users.find((c) => c.id === parseInt(req.params.id));
 
   if (!user) {
@@ -36,7 +36,7 @@ app.get("/:id", (req, res) => {
 });
 
 // Crear user
-app.post("/", (req, res) => {
+usersRouter.post("/", (req, res) => {
   const new_user = {
     id: users.length + 1,
     name: req.body.name,
@@ -49,7 +49,7 @@ app.post("/", (req, res) => {
 });
 
 // Actualizar user
-app.put("/:id", (req, res) => {
+usersRouter.put("/:id", (req, res) => {
   const user = users.find((c) => c.id === parseInt(req.params.id));
 
   if (!user) {
@@ -63,7 +63,7 @@ app.put("/:id", (req, res) => {
 });
 
 // Eliminar user
-app.delete("/:id", (req, res) => {
+usersRouter.delete("/:id", (req, res) => {
   const user = users.find((c) => c.id === parseInt(req.params.id));
   if (!user) {
     return res.status(404).send("User not found");
