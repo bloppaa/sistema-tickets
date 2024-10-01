@@ -8,74 +8,90 @@ const clients = [
     id: 1,
     name: "Juan",
     rut: "1234",
-    rut_company: "aaa111",
+    companyRut: "aaa111",
     email: "juan@gmail.com",
-    pasword: "a1",
+    password: "a1",
   },
   {
     id: 2,
     name: "Maria",
     rut: "2345",
-    rut_company: "bbb222",
+    companyRut: "bbb222",
     email: "maria@gmail.com",
-    pasword: "b2",
+    password: "b2",
   },
 ];
+// Campos requeridos
+const requiredFields = ["name", "rut", "companyRut", "email", "password"];
 
 // Obtener clients
 clientsRouter.get("/", (req, res) => {
-  res.status(200).json(clients);
+  return res.status(200).send(clients);
 });
 
 // Buscar client por id
 clientsRouter.get("/:id", (req, res) => {
   const client = clients.find((c) => c.id === parseInt(req.params.id));
-
   if (!client) {
-    return res.status(404).send("client no encontrado");
-  } else {
-    res.status(200).send(client);
+    return res.status(404).send({ message: "client not found" });
   }
+  return res.status(200).send(client);
 });
 
 // Crear client
 clientsRouter.post("/", (req, res) => {
-  const new_client = {
-    id: clients.length + 1,
-    name: req.body.name,
-    rut: req.body.rut,
-    rut_company: req.body.rut_company,
-    email: req.body.email,
-    pasword: req.body.pasword,
-  };
-  clients.push(new_client);
-  res.status(201).send(new_client);
+  try {
+    if (!requiredFields.every((field) => req.body[field])) {
+      return res.status(400).send({ message: "missing required fields" });
+    }
+    const newClient = {
+      id: clients.length + 1,
+      name: req.body.name,
+      rut: req.body.rut,
+      companyRut: req.body.companyRut,
+      email: req.body.email,
+      password: req.body.password,
+    };
+    clients.push(newClient);
+    return res.status(201).send(newClient);
+  } catch (err) {
+    console.error(err.message);
+    return res.status(500).send({ message: err.message });
+  }
 });
 
 // Actualizar client
 clientsRouter.put("/:id", (req, res) => {
-  const client = clients.find((c) => c.id === parseInt(req.params.id));
+  try {
+    if (!requiredFields.every((field) => req.body[field])) {
+      return res.status(400).send({ message: "missing required fields" });
+    }
+    const client = clients.find((c) => c.id === parseInt(req.params.id));
 
-  if (!client) {
-    return res.status(404).send("client no encontrado");
+    if (!client) {
+      return res.status(404).send({ message: "client not found" });
+    }
+    client.name = req.body.name;
+    client.rut = req.body.rut;
+    client.companyRut = req.body.companyRut;
+    client.email = req.body.email;
+    client.password = req.body.password;
+    return res.status(200).send(client);
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).send({ message: err.message });
   }
-  client.name = req.body.name;
-  client.rut = req.body.rut;
-  client.rut_company = req.body.rut_company;
-  client.email = req.body.email;
-  client.pasword = req.body.pasword;
-  res.status(200).send(client);
 });
 
 // Eliminar client
 clientsRouter.delete("/:id", (req, res) => {
   const client = clients.find((c) => c.id === parseInt(req.params.id));
   if (!client) {
-    return res.status(404).send("client no encontrado");
+    return res.status(404).send({ message: "client not found" });
   }
   const index = clients.indexOf(client);
   clients.splice(index, 1);
-  res.status(200).send(client);
+  return res.status(200).send({ message: "client deleted", client: client });
 });
 
 export default clientsRouter;

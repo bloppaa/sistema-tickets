@@ -10,7 +10,7 @@ app.use(express.json());
 
 // Página principal
 app.get("/", (req, res) => {
-  res.status(200).send("Node JS api");
+  return res.status(200).send("Node JS api");
 });
 
 app.use("/clients", clientsRoute);
