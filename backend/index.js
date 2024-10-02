@@ -17,6 +17,11 @@ app.get("/", (req, res) => {
     .send("<img src='https://i.imgflip.com/7llvbo.jpg' width='250'>");
 });
 
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  return res.status(500).send("Something broke!");
+});
+
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
 });
