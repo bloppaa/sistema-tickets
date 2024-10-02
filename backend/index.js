@@ -18,12 +18,12 @@ app.get("/", (req, res) => {
 });
 
 app.use((req, res, next) => {
-  return res.status(404).send("Page not found");
+  return res.status(404).send({ message: "Page not found" });
 })
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  return res.status(500).send("Oops, something went wrong");
+  return res.status(500).send({ message: "Oops, something went wrong" });
 });
 
 app.listen(port, () => {

@@ -2,6 +2,7 @@ CREATE DATABASE sistema_tickets;
 
 USE sistema_tickets;
 
+-- TODO: Agregar UNIQUE a email y rut
 CREATE TABLE
     user (
         id INTEGER PRIMARY KEY AUTO_INCREMENT,
