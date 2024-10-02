@@ -26,9 +26,11 @@ router.get("/:id", async (req, res) => {
 // Crear cliente
 router.post("/", async (req, res) => {
   if (!requiredFields.every((field) => req.body[field])) {
+    // Verificar que se envíen todos los campos requeridos
     return res.status(400).send({ message: "missing required fields" });
   }
 
+  // Evitar que se asignen campos adicionales
   const client = await clientQueries.createClient(
     req.body.name,
     req.body.rut,
@@ -42,10 +44,12 @@ router.post("/", async (req, res) => {
 
 // Actualizar cliente
 router.put("/:id", async (req, res) => {
+  // Verificar que se envíen todos los campos requeridos
   if (!requiredFields.every((field) => req.body[field])) {
     return res.status(400).send({ message: "missing required fields" });
   }
 
+  // Evitar que se asignen campos adicionales
   const client = await clientQueries.updateClient(
     req.params.id,
     req.body.name,

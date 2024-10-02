@@ -25,10 +25,12 @@ router.get("/:id", async (req, res) => {
 
 // Crear usuario
 router.post("/", async (req, res) => {
+  // Verificar que se envíen todos los campos requeridos
   if (!requiredFields.every((field) => req.body[field])) {
     return res.status(400).send({ message: "missing required fields" });
   }
 
+  // Evitar que se asignen campos adicionales
   const user = await userQueries.createUser(
     req.body.name,
     req.body.rut,
@@ -41,10 +43,12 @@ router.post("/", async (req, res) => {
 
 // Actualizar usuario
 router.put("/:id", async (req, res) => {
+  // Verificar que se envíen todos los campos requeridos
   if (!requiredFields.every((field) => req.body[field])) {
     return res.status(400).send({ message: "missing required fields" });
   }
 
+  // Evitar que se asignen campos adicionales
   const user = await userQueries.updateUser(
     req.params.id,
     req.body.name,

@@ -11,16 +11,19 @@ app.use(express.json());
 app.use("/clients", clientRoutes);
 app.use("/users", userRoutes);
 
+// Página de inicio
 app.get("/", (req, res) => {
   return res
     .status(200)
     .send("<img src='https://i.imgflip.com/7llvbo.jpg' width='250'>");
 });
 
+// Middleware para manejar errores de endpoints
 app.use((req, res, next) => {
   return res.status(404).send({ message: "Page not found" });
 })
 
+// Middleware para manejar errores del servidor
 app.use((err, req, res, next) => {
   console.error(err.stack);
   return res.status(500).send({ message: "Oops, something went wrong" });

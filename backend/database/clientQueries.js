@@ -1,6 +1,6 @@
 import pool from "../db.js";
 
-async function getClients() {
+export async function getClients() {
   const [rows] = await pool.query(
     `
     SELECT * FROM client
@@ -9,7 +9,7 @@ async function getClients() {
   return rows;
 }
 
-async function getClientById(id) {
+export async function getClientById(id) {
   const [rows] = await pool.query(
     `
     SELECT * FROM client WHERE id = ?
@@ -19,7 +19,7 @@ async function getClientById(id) {
   return rows[0];
 }
 
-async function createClient(name, rut, companyRut, email, password) {
+export async function createClient(name, rut, companyRut, email, password) {
   const [result] = await pool.query(
     `
     INSERT INTO client (name, rut, companyRut, email, password)
@@ -30,7 +30,7 @@ async function createClient(name, rut, companyRut, email, password) {
   return getClientById(result.insertId);
 }
 
-async function updateClient(id, name, rut, companyRut, email, password) {
+export async function updateClient(id, name, rut, companyRut, email, password) {
   await pool.query(
     `
     UPDATE client
@@ -42,7 +42,7 @@ async function updateClient(id, name, rut, companyRut, email, password) {
   return getClientById(id);
 }
 
-async function deleteClient(id) {
+export async function deleteClient(id) {
   await pool.query(
     `
     DELETE FROM client WHERE id = ?

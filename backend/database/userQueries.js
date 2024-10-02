@@ -1,6 +1,6 @@
 import pool from "../db.js";
 
-async function getUsers() {
+export async function getUsers() {
   const [rows] = await pool.query(
     `
     SELECT * FROM user
@@ -9,7 +9,7 @@ async function getUsers() {
   return rows;
 }
 
-async function getUserById(id) {
+export async function getUserById(id) {
   const [rows] = await pool.query(
     `
     SELECT * FROM user WHERE id = ?
@@ -19,7 +19,7 @@ async function getUserById(id) {
   return rows[0];
 }
 
-async function createUser(name, rut, email, password) {
+export async function createUser(name, rut, email, password) {
   const [result] = await pool.query(
     `
     INSERT INTO user (name, rut, email, password) VALUES (?, ?, ?, ?)
@@ -29,7 +29,7 @@ async function createUser(name, rut, email, password) {
   return getUserById(result.insertId);
 }
 
-async function updateUser(id, name, rut, email, password) {
+export async function updateUser(id, name, rut, email, password) {
   await pool.query(
     `
     UPDATE user SET name = ?, rut = ?, email = ?, password = ? WHERE id = ?
@@ -39,7 +39,7 @@ async function updateUser(id, name, rut, email, password) {
   return getUserById(id);
 }
 
-async function deleteUser(id) {
+export async function deleteUser(id) {
   await pool.query(
     `
     DELETE FROM user WHERE id = ?

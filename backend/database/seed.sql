@@ -1,3 +1,4 @@
+-- TODO: Dummy data. Remover antes de desplegar
 INSERT INTO
     user (name, rut, email, password)
 VALUES
