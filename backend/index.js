@@ -4,7 +4,7 @@ import clientRoutes from "./routes/clientRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 
 const app = express();
-const port = process.env.PORT | 8080;
+const port = process.env.PORT || 8080;
 
 app.use(express.json());
 
@@ -17,9 +17,13 @@ app.get("/", (req, res) => {
     .send("<img src='https://i.imgflip.com/7llvbo.jpg' width='250'>");
 });
 
+app.use((req, res, next) => {
+  return res.status(404).send("Page not found");
+})
+
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  return res.status(500).send("Something broke!");
+  return res.status(500).send("Oops, something went wrong");
 });
 
 app.listen(port, () => {
