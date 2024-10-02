@@ -1,20 +1,21 @@
 import express from "express";
 import "dotenv/config";
-import clientsRoute from "./routes/clientsRoute.js";
-import usersRoute from "./routes/usersRoute.js";
+import clientRouter from "./routes/client.js";
+import userRouter from "./routes/user.js";
 
 const app = express();
-const port = process.env.PORT;
+const port = process.env.PORT | 3000;
 
 app.use(express.json());
 
-// Página principal
-app.get("/", (req, res) => {
-  return res.status(200).send("Node JS api");
-});
+app.use("/clients", clientRouter);
+app.use("/users", userRouter);
 
-app.use("/clients", clientsRoute);
-app.use("/users", usersRoute);
+app.get("/", (req, res) => {
+  return res
+    .status(200)
+    .send("<img src='https://i.imgflip.com/7llvbo.jpg' width='250'>");
+});
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
