@@ -1,15 +1,15 @@
 import express from "express";
 import "dotenv/config";
-import clientRouter from "./routes/client.js";
-import userRouter from "./routes/user.js";
+import clientRoutes from "./routes/clientRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 
 const app = express();
 const port = process.env.PORT | 3000;
 
 app.use(express.json());
 
-app.use("/clients", clientRouter);
-app.use("/users", userRouter);
+app.use("/clients", clientRoutes);
+app.use("/users", userRoutes);
 
 app.get("/", (req, res) => {
   return res
