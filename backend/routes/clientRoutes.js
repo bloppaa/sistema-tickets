@@ -7,76 +7,96 @@ const router = express.Router();
 const requiredFields = ["name", "rut", "companyRut", "email", "password"];
 
 // Obtener todos los clientes
-router.get("/", async (req, res) => {
-  const clients = await clientQueries.getClients();
-  return res.status(200).send(clients);
+router.get("/", async (req, res, next) => {
+  try {
+    const clients = await clientQueries.getClients();
+    return res.status(200).send(clients);
+  } catch (error) {
+    next(error);
+  }
 });
 
 // Buscar cliente por id
-router.get("/:id", async (req, res) => {
-  const client = await clientQueries.getClientById(req.params.id);
+router.get("/:id", async (req, res, next) => {
+  try {
+    const client = await clientQueries.getClientById(req.params.id);
 
-  if (!client) {
-    return res.status(404).send({ message: "client not found" });
+    if (!client) {
+      return res.status(404).send({ message: "Client not found" });
+    }
+
+    return res.status(200).send(client);
+  } catch (error) {
+    next(error);
   }
-
-  return res.status(200).send(client);
 });
 
 // Crear cliente
-router.post("/", async (req, res) => {
+router.post("/", async (req, res, next) => {
   if (!requiredFields.every((field) => req.body[field])) {
     // Verificar que se envíen todos los campos requeridos
-    return res.status(400).send({ message: "missing required fields" });
+    return res.status(400).send({ message: "Missing required fields" });
   }
 
-  // Evitar que se asignen campos adicionales
-  const client = await clientQueries.createClient(
-    req.body.name,
-    req.body.rut,
-    req.body.companyRut,
-    req.body.email,
-    req.body.password
-  );
+  try {
+    // Evitar que se asignen campos adicionales
+    const client = await clientQueries.createClient(
+      req.body.name,
+      req.body.rut,
+      req.body.companyRut,
+      req.body.email,
+      req.body.password
+    );
 
-  return res.status(201).send({ message: "client created", client: client });
+    return res.status(201).send({ message: "Client created", client: client });
+  } catch (error) {
+    next(error);
+  }
 });
 
 // Actualizar cliente
-router.put("/:id", async (req, res) => {
+router.put("/:id", async (req, res, next) => {
   // Verificar que se envíen todos los campos requeridos
   if (!requiredFields.every((field) => req.body[field])) {
-    return res.status(400).send({ message: "missing required fields" });
+    return res.status(400).send({ message: "Missing required fields" });
   }
 
-  // Evitar que se asignen campos adicionales
-  const client = await clientQueries.updateClient(
-    req.params.id,
-    req.body.name,
-    req.body.rut,
-    req.body.companyRut,
-    req.body.email,
-    req.body.password
-  );
+  try {
+    // Evitar que se asignen campos adicionales
+    const client = await clientQueries.updateClient(
+      req.params.id,
+      req.body.name,
+      req.body.rut,
+      req.body.companyRut,
+      req.body.email,
+      req.body.password
+    );
 
-  if (!client) {
-    return res.status(404).send({ message: "client not found" });
+    if (!client) {
+      return res.status(404).send({ message: "Client not found" });
+    }
+
+    return res.status(200).send({ message: "Client updated", client: client });
+  } catch (error) {
+    next(error);
   }
-
-  return res.status(200).send({ message: "client updated", client: client });
 });
 
 // Eliminar client
-router.delete("/:id", async (req, res) => {
-  const client = await clientQueries.getClientById(req.params.id);
+router.delete("/:id", async (req, res, next) => {
+  try {
+    const client = await clientQueries.getClientById(req.params.id);
 
-  if (!client) {
-    return res.status(404).send({ message: "client not found" });
+    if (!client) {
+      return res.status(404).send({ message: "Client not found" });
+    }
+
+    await clientQueries.deleteClient(req.params.id);
+
+    return res.status(200).send({ message: "Client deleted" });
+  } catch (error) {
+    next(error);
   }
-
-  await clientQueries.deleteClient(req.params.id);
-
-  return res.status(200).send({ message: "client deleted" });
 });
 
 export default router;
