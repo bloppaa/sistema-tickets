@@ -2,7 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import sequelize from "./config/database.js";
 // import clientRoutes from "./routes/clientRoutes.js";
-// import userRoutes from "./routes/userRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 
 dotenv.config();
 
@@ -12,7 +12,7 @@ const port = process.env.PORT || 3000;
 app.use(express.json());
 
 // app.use("/clients", clientRoutes);
-// app.use("/users", userRoutes);
+app.use("/users", userRoutes);
 
 // Página de inicio
 app.get("/", (req, res) => {
@@ -33,7 +33,7 @@ app.use((err, req, res, next) => {
 try {
   // Sincronizar tablas
   await sequelize.sync();
-  
+
   app.listen(port, () => {
     console.log(`Listening on port ${port}`);
   });
