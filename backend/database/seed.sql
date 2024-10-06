@@ -24,21 +24,21 @@ INSERT INTO client (name, rut, companyRut, email, password)
 VALUES
     (
         'client_1',
-        '1.111.111-1',
+        '4.444.444-4',
         '1.111.111-K',
         'client_1@company1.cl',
         '$2a$12$FlZJ2mTZwhDyz/eL2fumTeNRESGjBTYCkjia7yTahwc9wmWW.l0wu'
     ),
     (
         'client_2',
-        '2.222.222-2',
+        '5.555.555-5',
         '2.222.222-K',
         'client_2@company2.cl',
         '$2a$12$xy8eo3SwydfJ/Ce1Nn1wz.S2fqGWyTnchDH.0YyqXGJdxe1jNOBsS'
     ),
     (
         'client_3',
-        '3.333.333-3',
+        '6.666.666-6',
         '3.333.333-K',
         'client_3@company3.cl',
         '$2a$12$D5ztlO8WoiOsxiLdlJHyGuNgOwsGGHy0E6ONXzc45CrUHKoJpCLE.'
