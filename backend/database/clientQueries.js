@@ -1,4 +1,7 @@
 import pool from "../db.js";
+import bcrypt from "bcrypt";
+
+const saltRounds = 10;
 
 export async function getClients() {
   const [rows] = await pool.query(
@@ -20,24 +23,26 @@ export async function getClientById(id) {
 }
 
 export async function createClient(name, rut, companyRut, email, password) {
+  const hashedPassword = await bcrypt.hash(password, saltRounds);
   const [result] = await pool.query(
     `
     INSERT INTO client (name, rut, companyRut, email, password)
     VALUES (?, ?, ?, ?, ?)
     `,
-    [name, rut, companyRut, email, password]
+    [name, rut, companyRut, email, hashedPassword]
   );
   return getClientById(result.insertId);
 }
 
 export async function updateClient(id, name, rut, companyRut, email, password) {
+  const hashedPassword = await bcrypt.hash(password, saltRounds);
   await pool.query(
     `
     UPDATE client
     SET name = ?, rut = ?, companyRut = ?, email = ?, password = ?
     WHERE id = ?
     `,
-    [name, rut, companyRut, email, password, id]
+    [name, rut, companyRut, email, hashedPassword, id]
   );
   return getClientById(id);
 }
