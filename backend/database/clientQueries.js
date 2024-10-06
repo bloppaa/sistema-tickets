@@ -6,7 +6,7 @@ const saltRounds = 10;
 export async function getClients() {
   const [rows] = await pool.query(
     `
-    SELECT * FROM client
+    SELECT * FROM clients
     `
   );
   return rows;
@@ -15,7 +15,7 @@ export async function getClients() {
 export async function getClientById(id) {
   const [rows] = await pool.query(
     `
-    SELECT * FROM client WHERE id = ?
+    SELECT * FROM clients WHERE id = ?
     `,
     [id]
   );
@@ -26,7 +26,7 @@ export async function createClient(name, rut, companyRut, email, password) {
   const hashedPassword = await bcrypt.hash(password, saltRounds);
   const [result] = await pool.query(
     `
-    INSERT INTO client (name, rut, companyRut, email, password)
+    INSERT INTO clients (name, rut, companyRut, email, password)
     VALUES (?, ?, ?, ?, ?)
     `,
     [name, rut, companyRut, email, hashedPassword]
@@ -38,7 +38,7 @@ export async function updateClient(id, name, rut, companyRut, email, password) {
   const hashedPassword = await bcrypt.hash(password, saltRounds);
   await pool.query(
     `
-    UPDATE client
+    UPDATE clients
     SET name = ?, rut = ?, companyRut = ?, email = ?, password = ?
     WHERE id = ?
     `,
@@ -50,7 +50,7 @@ export async function updateClient(id, name, rut, companyRut, email, password) {
 export async function deleteClient(id) {
   await pool.query(
     `
-    DELETE FROM client WHERE id = ?
+    DELETE FROM clients WHERE id = ?
     `, 
     [id]
   );

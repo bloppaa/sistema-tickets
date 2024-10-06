@@ -2,7 +2,7 @@ CREATE DATABASE sistema_tickets;
 
 USE sistema_tickets;
 
-CREATE TABLE user
+CREATE TABLE users
 (
     id INTEGER PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
@@ -11,7 +11,7 @@ CREATE TABLE user
     password CHAR(60) NOT NULL
 );
 
-CREATE TABLE client 
+CREATE TABLE clients
 (
     id INTEGER PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,

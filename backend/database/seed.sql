@@ -1,5 +1,5 @@
 -- TODO: Dummy data. Remover antes de desplegar
-INSERT INTO user (name, rut, email, password)
+INSERT INTO users (name, rut, email, password)
 VALUES
     (
         'user_1',
@@ -20,7 +20,7 @@ VALUES
         '$2a$12$.s8kh8u8WWA6JYwRqcuY4OUdoCFPzJ26UW.h.qQ6i7l/xInBYsrcW'
     );
 
-INSERT INTO client (name, rut, companyRut, email, password)
+INSERT INTO clients (name, rut, companyRut, email, password)
 VALUES
     (
         'client_1',
