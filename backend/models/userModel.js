@@ -1,6 +1,6 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/database.js";
-import { isEmail, isAlphanumeric } from "validator";
+import validator from "validator";
 
 class User extends Model {
   errors = [];
@@ -37,7 +37,7 @@ class User extends Model {
     // Validar nombre
     if (!this.name) {
       this.errors.push("Name is required");
-    } else if (!isAlphanumeric(this.name)) {
+    } else if (!validator.isAlphanumeric(this.name)) {
       this.errors.push("Name must be alphanumeric");
     }
 
@@ -53,7 +53,7 @@ class User extends Model {
     // Que esté en el formato string@string.string
     if (!this.email) {
       this.errors.push("Email is required");
-    } else if (!isEmail(this.email)) {
+    } else if (!validator.isEmail(this.email)) {
       this.errors.push("Email is invalid");
     }
 
