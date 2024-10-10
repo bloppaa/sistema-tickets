@@ -9,14 +9,14 @@ import bcrypt from "bcrypt";
  *          `false` en caso contrario.
  */
 const validateRut = function (rut) {
-  const [rut, dv] = value.split("-");
-  const reversedRut = [...rut].reverse();
+  const [body, dv] = value.split("-");
+  const reversedBody = [...body].reverse();
   let sum = 0;
   let multiplier = 0;
 
-  for (let i = 0; i < reversedRut.length; i++) {
-    if (!isNaN(reversedRut[i])) {
-      sum += reversedRut[i] * ((multiplier++ % 6) + 2);
+  for (let i = 0; i < reversedBody.length; i++) {
+    if (!isNaN(reversedBody[i])) {
+      sum += reversedBody[i] * ((multiplier++ % 6) + 2);
     }
   }
 
