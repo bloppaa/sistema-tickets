@@ -1,110 +1,94 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/database.js";
-import validator from "validator";
+import bcrypt from "bcrypt";
 
-class User extends Model {
-  errors = [];
-  static minimumPasswordLength = 6;
-  static rutRegex = /^[1-9]\d?(?:\.\d{3}){2}-[\dK]$/;
+/**
+ * Calcula el DV de un RUT y lo compara con el DV proporcionado.
+ * @param {string} rut El RUT a validar.
+ * @returns `true` si el RUT es válido, es decir, si los DVs coinciden.
+ *          `false` en caso contrario.
+ */
+const validateRut = function (rut) {
+  const [rut, dv] = value.split("-");
+  const reversedRut = [...rut].reverse();
+  let sum = 0;
+  let multiplier = 0;
 
-  /**
-   * Calcula el DV del RUT y verifica si coincide con el ingresado.
-   * @returns {boolean} `true` si el RUT es válido, `false` si no.
-   */
-  validateRut() {
-    const [rut, dv] = this.rut.split("-");
-    const reversedRut = [...rut].reverse();
-    let sum = 0;
-    let multiplier = 0;
-
-    for (let i = 0; i < reversedRut.length; i++) {
-      if (!isNaN(reversedRut[i])) {
-        sum += reversedRut[i] * (multiplier++ % 6 + 2);
-      }
-    }
-
-    const result = 11 - (sum % 11);
-    const calculatedDv = result === 10 ? "K" : result % 11;
-
-    return dv == calculatedDv;
-  }
-
-  /**
-   * Valida los datos del usuario. En caso de errores, almacena los mensajes
-   * en `errors`.
-   */
-  validate() {
-    // Validar nombre
-    if (!this.name) {
-      this.errors.push("Name is required");
-    } else if (!validator.isAlphanumeric(this.name)) {
-      this.errors.push("Name must be alphanumeric");
-    }
-
-    // Validar RUT
-    // Que esté en el formato XX.XXX.XXX-X y su DV sea válido
-    if (!this.rut) {
-      this.errors.push("RUT is required");
-    } else if (!User.rutRegex.test(this.rut) || !this.validateRut()) {
-      this.errors.push("RUT is invalid");
-    }
-
-    // Validar email
-    // Que esté en el formato string@string.string
-    if (!this.email) {
-      this.errors.push("Email is required");
-    } else if (!validator.isEmail(this.email)) {
-      this.errors.push("Email is invalid");
-    }
-
-    // Validar contraseña
-    // Que tenga una longitud mínima
-    if (!this.password) {
-      this.errors.push("Password is required");
-    } else if (this.password.length < User.minimumPasswordLength) {
-      this.errors.push(
-        `Password must be at least ${User.minimumPasswordLength} characters`
-      );
+  for (let i = 0; i < reversedRut.length; i++) {
+    if (!isNaN(reversedRut[i])) {
+      sum += reversedRut[i] * ((multiplier++ % 6) + 2);
     }
   }
 
-  /**
-   * Registra un usuario en la base de datos
-   */
-  register() {
-    this.validate();
-  }
+  const result = 11 - (sum % 11);
+  const calculatedDv = result === 10 ? "K" : result % 11;
+
+  return dv == calculatedDv;
 }
 
-User.init(
+const User = sequelize.define(
+  "User",
   {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
+
     name: {
       type: DataTypes.STRING,
       allowNull: false,
+      validate: {
+        notEmpty: { msg: "name can't be empty" },
+        isAlpha: { msg: "name must contain only letters" },
+      },
     },
+
     rut: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
+      validate: {
+        notEmpty: { msg: "rut can't be empty" },
+        is: {
+          args: /^[1-9]\d?(?:\.\d{3}){2}-[\dK]$/,
+          msg: "rut is not valid",
+        },
+        isValidRut(value) {
+          if (!validateRut(value)) throw new Error("rut is not valid");
+        },
+      },
     },
+
     email: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
+      validate: {
+        notEmpty: { msg: "email can't be empty" },
+        isEmail: { msg: "email is not valid" },
+      },
     },
+
     password: {
       type: DataTypes.CHAR(60),
       allowNull: false,
+      validate: {
+        notEmpty: { msg: "password can't be empty" },
+        len: {
+          args: [6, 255],
+          msg: "password must be at least 6 characters long",
+        },
+      },
     },
   },
   {
-    sequelize,
-    modelName: "user",
+    hooks: {
+      // Hashear contraseña antes de crear un usuario
+      beforeCreate: async (user) => {
+        user.password = await bcrypt.hash(user.password, 10);
+      },
+    },
   }
 );
 
