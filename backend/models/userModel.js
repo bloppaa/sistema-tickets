@@ -1,10 +1,10 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/database.js";
+import { isEmail, isAlphanumeric } from "validator";
 
 class User extends Model {
   errors = [];
   static minimumPasswordLength = 6;
-  static emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   static rutRegex = /^[1-9]\d?(?:\.\d{3}){2}-[\dK]$/;
 
   /**
@@ -37,6 +37,8 @@ class User extends Model {
     // Validar nombre
     if (!this.name) {
       this.errors.push("Name is required");
+    } else if (!isAlphanumeric(this.name)) {
+      this.errors.push("Name must be alphanumeric");
     }
 
     // Validar RUT
@@ -51,7 +53,7 @@ class User extends Model {
     // Que esté en el formato string@string.string
     if (!this.email) {
       this.errors.push("Email is required");
-    } else if (!User.emailRegex.test(this.email)) {
+    } else if (!isEmail(this.email)) {
       this.errors.push("Email is invalid");
     }
 
