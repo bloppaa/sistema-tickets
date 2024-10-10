@@ -24,22 +24,29 @@ export const getUserById = async (req, res, next) => {
   }
 };
 
-export const createUser = async (req, res, next) => {
-  const { name, rut, email, password } = req.body;
+export const register = async (req, res, next) => {
+  const user = User.build(req.body);
+  user.register();
 
-  try {
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.create({
-      name,
-      rut,
-      email,
-      password: hashedPassword,
-    });
-
+  if (user.errors.length > 0) {
+    return res.status(400).send(user.errors);
+  } else {
     return res.status(201).send({ message: "User created", user });
-  } catch (err) {
-    next(err);
   }
+
+  // try {
+  //   const hashedPassword = await bcrypt.hash(password, 10);
+  //   const user = await User.create({
+  //     name,
+  //     rut,
+  //     email,
+  //     password: hashedPassword,
+  //   });
+
+  //   return res.status(201).send({ message: "User created", user });
+  // } catch (err) {
+  //   next(err);
+  // }
 };
 
 export const updateUser = async (req, res, next) => {
@@ -85,12 +92,4 @@ export const deleteUser = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-};
-
-export default {
-  getUsers,
-  getUserById,
-  createUser,
-  updateUser,
-  deleteUser,
 };

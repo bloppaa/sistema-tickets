@@ -1,7 +1,34 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/database.js";
 
-class User extends Model {}
+class User extends Model {
+  errors = [];
+
+  /**
+   * Valida los datos del usuario
+   */
+  validate() {
+    if (!this.name) {
+      this.errors.push("Name is required");
+    }
+    if (!this.rut) {
+      this.errors.push("RUT is required");
+    }
+    if (!this.email) {
+      this.errors.push("Email is required");
+    }
+    if (!this.password) {
+      this.errors.push("Password is required");
+    }
+  }
+
+  /**
+   * Registra un usuario en la base de datos
+   */
+  register() {
+    this.validate();
+  }
+}
 
 User.init(
   {
