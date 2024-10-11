@@ -2,6 +2,7 @@ import express from "express";
 import "dotenv/config";
 import sequelize from "./config/database.js";
 import userRoutes from "./routes/userRoutes.js";
+import clientRoutes from "./routes/clientRoutes.js";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -9,6 +10,7 @@ const port = process.env.PORT || 3000;
 app.use(express.json());
 
 app.use("/users", userRoutes);
+app.use("/clients", clientRoutes);
 
 // Middleware para manejar errores 404
 app.use((req, res, next) => {
