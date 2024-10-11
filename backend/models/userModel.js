@@ -1,34 +1,10 @@
-import { DataTypes, Model } from "sequelize";
+import { DataTypes } from "sequelize";
 import sequelize from "../config/database.js";
 import bcrypt from "bcrypt";
+import { validateRut } from "../utils/rutValidator.js";
 
-class User extends Model {
-  /**
-   * Calcula el DV de un RUT y lo compara con el DV proporcionado.
-   * @param {string} rut El RUT a validar.
-   * @returns `true` si el RUT es válido, es decir, si los DVs coinciden.
-   *          `false` en caso contrario.
-   */
-  validateRut() {
-    const [body, dv] = this.rut.split("-");
-    const reversedBody = [...body].reverse();
-    let sum = 0;
-    let multiplier = 0;
-
-    for (let i = 0; i < reversedBody.length; i++) {
-      if (!isNaN(reversedBody[i])) {
-        sum += reversedBody[i] * ((multiplier++ % 6) + 2);
-      }
-    }
-
-    const result = 11 - (sum % 11);
-    const calculatedDv = result === 10 ? "K" : result % 11;
-
-    return dv == calculatedDv;
-  }
-}
-
-User.init(
+export default User = sequelize.define(
+  "User",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -53,7 +29,7 @@ User.init(
         isValidRut(value) {
           if (!value.match(/^\d{1,3}\.\d{3}\.\d{3}-[\dK]$/)) {
             throw new Error("rut is in an invalid format");
-          } else if (!this.validateRut()) throw new Error("rut is not valid");
+          } else if (!validateRut(value)) throw new Error("rut is not valid");
         },
       },
     },
@@ -81,8 +57,6 @@ User.init(
     },
   },
   {
-    sequelize,
-    modelName: "User",
     hooks: {
       // Antes de validar los datos, eliminar espacios en blanco del RUT y el
       // email, y convertir el email a minúsculas
@@ -100,5 +74,3 @@ User.init(
     },
   }
 );
-
-export default User;
