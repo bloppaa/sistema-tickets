@@ -22,6 +22,7 @@ export const register = async (req, res, next) => {
 
 export const login = async (req, res, next) => {
   try {
+    console.log(req.body)
     const user = await userService.login(req.body);
 
     return res.status(200).send({ message: "user logged in", user });

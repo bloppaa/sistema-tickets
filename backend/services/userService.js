@@ -22,7 +22,12 @@ const login = async (data) => {
     throw new errors.IncorrectPasswordError();
   }
 
-  return user;
+  return {
+    id: user.id,
+    name: user.name,
+    rut: user.rut,
+    email: user.email,
+  };
 };
 
 export default {
