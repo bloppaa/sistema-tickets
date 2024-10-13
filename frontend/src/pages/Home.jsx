@@ -1,12 +1,14 @@
 import React, { useState } from 'react'
+import axios from 'axios'
 
 export default function LoginPage() {
-  const [username, setUsername] = useState('')
+  const [identifier, setIdentifier] = useState('')
   const [password, setPassword] = useState('')
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log('Login attempt', { username, password })
+    const response = await axios.post('http://localhost:3000/users/login', { identifier, password })
+    console.log(response)
   }
 
   return (
@@ -21,16 +23,16 @@ export default function LoginPage() {
           <input type="hidden" name="remember" defaultValue="true" />
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
-              <label htmlFor="username" className="sr-only">Nombre de usuario</label>
+              <label htmlFor="identifier" className="sr-only">RUT o correo electrónico</label>
               <input
-                id="username"
-                name="username"
+                id="identifier"
+                name="identifier"
                 type="text"
                 required
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Nombre de usuario"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                placeholder="RUT o correo electrónico"
+                value={identifier}
+                onChange={(e) => setIdentifier(e.target.value)}
               />
             </div>
             <div>
