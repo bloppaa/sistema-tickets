@@ -15,7 +15,7 @@ const errorMessages = {
   },
 };
 
-export default User = sequelize.define(
+const User = sequelize.define(
   "User",
   {
     id: {
@@ -88,3 +88,5 @@ export default User = sequelize.define(
     },
   }
 );
+
+export default User;

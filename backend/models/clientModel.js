@@ -3,7 +3,7 @@ import sequelize from "../config/database.js";
 import bcrypt from "bcrypt";
 import { validateRut } from "../utils/rutValidator.js";
 
-export default Client = sequelize.define(
+const Client = sequelize.define(
   "Client",
   {
     id: {
@@ -89,3 +89,5 @@ export default Client = sequelize.define(
     },
   }
 );
+
+export default Client;
