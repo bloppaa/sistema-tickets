@@ -3,6 +3,18 @@ import sequelize from "../config/database.js";
 import bcrypt from "bcrypt";
 import { validateRut } from "../utils/rutValidator.js";
 
+const MIN_PASSWORD_LENGTH = 6;
+const RUT_REGEX = /^\d{1,3}\.\d{3}\.\d{3}-[\dK]$/;
+
+const errorMessages = {
+  notEmpty: (field) => `${field} can't be empty`,
+  notValid: (field) => `${field} is not valid`,
+  invalidFormat: (field) => `${field} is in an invalid format`,
+  tooShort: (field, length) => {
+    return `${field} must be at least ${length} characters long`;
+  },
+};
+
 export default User = sequelize.define(
   "User",
   {
@@ -16,7 +28,7 @@ export default User = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        notEmpty: { msg: "name can't be empty" },
+        notEmpty: { msg: errorMessages.notEmpty("name") },
       },
     },
 
@@ -25,11 +37,13 @@ export default User = sequelize.define(
       allowNull: false,
       unique: true,
       validate: {
-        notEmpty: { msg: "rut can't be empty" },
+        notEmpty: { msg: errorMessages.notEmpty("rut") },
         isValidRut(value) {
-          if (!value.match(/^\d{1,3}\.\d{3}\.\d{3}-[\dK]$/)) {
-            throw new Error("rut is in an invalid format");
-          } else if (!validateRut(value)) throw new Error("rut is not valid");
+          if (!value.match(RUT_REGEX)) {
+            throw new Error(errorMessages.invalidFormat("rut"));
+          } else if (!validateRut(value)) {
+            throw new Error(errorMessages.notValid("rut"));
+          }
         },
       },
     },
@@ -39,8 +53,8 @@ export default User = sequelize.define(
       allowNull: false,
       unique: true,
       validate: {
-        notEmpty: { msg: "email can't be empty" },
-        isEmail: { msg: "email is not valid" },
+        notEmpty: { msg: errorMessages.notEmpty("email") },
+        isEmail: { msg: errorMessages.invalidFormat("email") },
       },
     },
 
@@ -48,10 +62,10 @@ export default User = sequelize.define(
       type: DataTypes.CHAR(60),
       allowNull: false,
       validate: {
-        notEmpty: { msg: "password can't be empty" },
+        notEmpty: { msg: errorMessages.notEmpty("password") },
         len: {
-          args: [6, 255],
-          msg: "password must be at least 6 characters long",
+          args: [MIN_PASSWORD_LENGTH, 255],
+          msg: errorMessages.tooShort("password", MIN_PASSWORD_LENGTH),
         },
       },
     },
