@@ -3,19 +3,7 @@ import sequelize from "../config/database.js";
 import bcrypt from "bcrypt";
 import { validateRut } from "../utils/rutValidator.js";
 
-const MIN_PASSWORD_LENGTH = 6;
-const RUT_REGEX = /^\d{1,3}\.\d{3}\.\d{3}-[\dK]$/;
-
-const errorMessages = {
-  notEmpty: (field) => `${field} can't be empty`,
-  notValid: (field) => `${field} is not valid`,
-  invalidFormat: (field) => `${field} is in an invalid format`,
-  tooShort: (field, length) => {
-    return `${field} must be at least ${length} characters long`;
-  },
-};
-
-export default User = sequelize.define(
+const User = sequelize.define(
   "User",
   {
     id: {
@@ -28,7 +16,7 @@ export default User = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        notEmpty: { msg: errorMessages.notEmpty("name") },
+        notEmpty: { msg: "name can't be empty" },
       },
     },
 
@@ -37,13 +25,11 @@ export default User = sequelize.define(
       allowNull: false,
       unique: true,
       validate: {
-        notEmpty: { msg: errorMessages.notEmpty("rut") },
+        notEmpty: { msg: "rut can't be empty" },
         isValidRut(value) {
-          if (!value.match(RUT_REGEX)) {
-            throw new Error(errorMessages.invalidFormat("rut"));
-          } else if (!validateRut(value)) {
-            throw new Error(errorMessages.notValid("rut"));
-          }
+          if (!value.match(/^\d{1,3}\.\d{3}\.\d{3}-[\dK]$/)) {
+            throw new Error("rut is in an invalid format");
+          } else if (!validateRut(value)) throw new Error("rut is not valid");
         },
       },
     },
@@ -53,8 +39,8 @@ export default User = sequelize.define(
       allowNull: false,
       unique: true,
       validate: {
-        notEmpty: { msg: errorMessages.notEmpty("email") },
-        isEmail: { msg: errorMessages.invalidFormat("email") },
+        notEmpty: { msg: "email can't be empty" },
+        isEmail: { msg: "email is not valid" },
       },
     },
 
@@ -62,10 +48,10 @@ export default User = sequelize.define(
       type: DataTypes.CHAR(60),
       allowNull: false,
       validate: {
-        notEmpty: { msg: errorMessages.notEmpty("password") },
+        notEmpty: { msg: "password can't be empty" },
         len: {
-          args: [MIN_PASSWORD_LENGTH, 255],
-          msg: errorMessages.tooShort("password", MIN_PASSWORD_LENGTH),
+          args: [6, 255],
+          msg: "password must be at least 6 characters long",
         },
       },
     },
@@ -88,3 +74,5 @@ export default User = sequelize.define(
     },
   }
 );
+
+export default User;
