@@ -2,6 +2,11 @@ import { DataTypes } from "sequelize";
 import sequelize from "../config/database.js";
 import bcrypt from "bcrypt";
 import { validateRut } from "../utils/rutValidator.js";
+import {
+  MIN_PASSWORD_LENGTH,
+  RUT_REGEX,
+  validationErrorMessages as messages,
+} from "../utils/errors.js";
 
 const Client = sequelize.define(
   "Client",
@@ -16,7 +21,7 @@ const Client = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        notEmpty: { msg: "name can't be empty" },
+        notEmpty: { msg: messages.notEmpty("name") },
       },
     },
 
@@ -25,11 +30,13 @@ const Client = sequelize.define(
       allowNull: false,
       unique: true,
       validate: {
-        notEmpty: { msg: "rut can't be empty" },
+        notEmpty: { msg: messages.notEmpty("rut") },
         isValidRut(value) {
-          if (!value.match(/^\d{1,3}\.\d{3}\.\d{3}-[\dK]$/)) {
-            throw new Error("rut is in an invalid format");
-          } else if (!validateRut(value)) throw new Error("rut is not valid");
+          if (!value.match(RUT_REGEX)) {
+            throw new Error(messages.invalidFormat("rut"));
+          } else if (!validateRut(value)) {
+            throw new Error(messages.notValid("rut"));
+          };
         },
       },
     },
@@ -38,12 +45,12 @@ const Client = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        notEmpty: { msg: "company rut can't be empty" },
+        notEmpty: { msg: messages.notEmpty("company rut") },
         isValidRut(value) {
-          if (!value.match(/^\d{1,3}\.\d{3}\.\d{3}-[\dK]$/)) {
-            throw new Error("company rut is in an invalid format");
+          if (!value.match(RUT_REGEX)) {
+            throw new Error(messages.invalidFormat("company rut"));
           } else if (!validateRut(value)) {
-            throw new Error("company rut is not valid")
+            throw new Error(messages.notValid("company rut"));
           };
         },
       },
@@ -54,8 +61,8 @@ const Client = sequelize.define(
       allowNull: false,
       unique: true,
       validate: {
-        notEmpty: { msg: "email can't be empty" },
-        isEmail: { msg: "email is not valid" },
+        notEmpty: { msg: messages.notEmpty("email") },
+        isEmail: { msg: messages.invalidFormat("email") },
       },
     },
 
@@ -63,10 +70,10 @@ const Client = sequelize.define(
       type: DataTypes.CHAR(60),
       allowNull: false,
       validate: {
-        notEmpty: { msg: "password can't be empty" },
+        notEmpty: { msg: messages.notEmpty("password") },
         len: {
-          args: [6, 255],
-          msg: "password must be at least 6 characters long",
+          args: [MIN_PASSWORD_LENGTH, 255],
+          msg: messages.tooShort("password", MIN_PASSWORD_LENGTH),
         },
       },
     },

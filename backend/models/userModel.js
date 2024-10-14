@@ -2,18 +2,11 @@ import { DataTypes } from "sequelize";
 import sequelize from "../config/database.js";
 import bcrypt from "bcrypt";
 import { validateRut } from "../utils/rutValidator.js";
-
-const MIN_PASSWORD_LENGTH = 6;
-const RUT_REGEX = /^\d{1,3}\.\d{3}\.\d{3}-[\dK]$/;
-
-const errorMessages = {
-  notEmpty: (field) => `${field} can't be empty`,
-  notValid: (field) => `${field} is not valid`,
-  invalidFormat: (field) => `${field} is in an invalid format`,
-  tooShort: (field, length) => {
-    return `${field} must be at least ${length} characters long`;
-  },
-};
+import {
+  MIN_PASSWORD_LENGTH,
+  RUT_REGEX,
+  validationErrorMessages as messages,
+} from "../utils/errors.js";
 
 const User = sequelize.define(
   "User",
@@ -28,7 +21,7 @@ const User = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        notEmpty: { msg: errorMessages.notEmpty("name") },
+        notEmpty: { msg: messages.notEmpty("name") },
       },
     },
 
@@ -37,12 +30,12 @@ const User = sequelize.define(
       allowNull: false,
       unique: true,
       validate: {
-        notEmpty: { msg: errorMessages.notEmpty("rut") },
+        notEmpty: { msg: messages.notEmpty("rut") },
         isValidRut(value) {
           if (!value.match(RUT_REGEX)) {
-            throw new Error(errorMessages.invalidFormat("rut"));
+            throw new Error(messages.invalidFormat("rut"));
           } else if (!validateRut(value)) {
-            throw new Error(errorMessages.notValid("rut"));
+            throw new Error(messages.notValid("rut"));
           }
         },
       },
@@ -53,8 +46,8 @@ const User = sequelize.define(
       allowNull: false,
       unique: true,
       validate: {
-        notEmpty: { msg: errorMessages.notEmpty("email") },
-        isEmail: { msg: errorMessages.invalidFormat("email") },
+        notEmpty: { msg: messages.notEmpty("email") },
+        isEmail: { msg: messages.invalidFormat("email") },
       },
     },
 
@@ -62,10 +55,10 @@ const User = sequelize.define(
       type: DataTypes.CHAR(60),
       allowNull: false,
       validate: {
-        notEmpty: { msg: errorMessages.notEmpty("password") },
+        notEmpty: { msg: messages.notEmpty("password") },
         len: {
           args: [MIN_PASSWORD_LENGTH, 255],
-          msg: errorMessages.tooShort("password", MIN_PASSWORD_LENGTH),
+          msg: messages.tooShort("password", MIN_PASSWORD_LENGTH),
         },
       },
     },
