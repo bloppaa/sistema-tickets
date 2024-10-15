@@ -36,8 +36,4 @@ class IncorrectPasswordError extends AppError {
 export default {
   UserNotFoundError,
   IncorrectPasswordError,
-  EmptyFieldError,
-  WrongFormatError,
-  InvalidValueError,
-  TooShortError,
 };
